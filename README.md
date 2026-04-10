@@ -9,7 +9,7 @@ root/
 ├── common/                # Funzioni comuni che i test chiamano
 │   ├── common.cpp           
 │   └── common.hpp 
-├── Assignment1/
+├── 1Assignment/
 │   ├── CMakeLists.txt
 │   ├── OptzA/             # Sorgenti ottimizzazione A
 │   │   ├── Pass.cpp
