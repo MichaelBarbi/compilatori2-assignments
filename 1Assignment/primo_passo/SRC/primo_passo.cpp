@@ -19,13 +19,58 @@ namespace {
     // corresponding pass manager (to be queried if need be)
         PreservedAnalyses run(Function &F, FunctionAnalysisManager &) {
 
-            //Nome
-            errs() << "Nome: " << F.getName() << "\n";
+            for (auto &BB : F) {
+                for (auto &I : BB) {
+                    // Controllo se è una ADD
+                    if (I.getOpcode() == Instruction::Add) {
+                        Value *LHS = I.getOperand(0);
+                        Value *RHS = I.getOperand(1);
 
+                        // x + 0 => x
+                        if (ConstantInt *C = dyn_cast<ConstantInt>(RHS)) {
+                            if (C->isZero()) {
+                                errs() << "Algebraic Identity: " << I << " => ";
+                                I.replaceAllUsesWith(LHS);
+                                errs() << *LHS << "\n";
+                            }
+                        }
+                        // 0 + x => x
+                        if (ConstantInt *C = dyn_cast<ConstantInt>(LHS)) {
+                            if (C->isZero()) {
+                                errs() << "Algebraic Identity: " << I << " => ";
+                                I.replaceAllUsesWith(RHS);
+                                errs() << *RHS << "\n";
+                            }
+                        }
+                    }
 
-        return PreservedAnalyses::all();
-    }
+                    // Controllo se è una MUL
+                    if (I.getOpcode() == Instruction::Mul) {
+                        Value *LHS = I.getOperand(0);
+                        Value *RHS = I.getOperand(1);
 
+                        // x * 1 => x
+                        if (ConstantInt *C = dyn_cast<ConstantInt>(RHS)) {
+                            if (C->isOne()) {
+                                errs() << "Algebraic Identity: " << I << " => ";
+                                I.replaceAllUsesWith(LHS);
+                                errs() << *LHS << "\n";
+                            }
+                        }
+                        // 1 * x => x
+                        if (ConstantInt *C = dyn_cast<ConstantInt>(LHS)) {
+                            if (C->isOne()) {
+                                errs() << "Algebraic Identity: " << I << " => ";
+                                I.replaceAllUsesWith(RHS);
+                                errs() << *RHS << "\n";
+                            }
+                        }
+                    }
+                }
+            }
+
+            return PreservedAnalyses::all();
+        }
 
     // Without isRequired returning true, this pass will be skipped for functions
     // decorated with the optnone LLVM attribute. Note that clang -O0 decorates
