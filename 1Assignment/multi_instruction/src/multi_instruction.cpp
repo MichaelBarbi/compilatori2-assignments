@@ -27,19 +27,20 @@ namespace {
             for (BasicBlock &BB : F) {
                 for (auto it = BB.begin(), end = BB.end(); it != end; ++it) {
                     if (auto *I = dyn_cast<Instruction>(&*it)) {
-                        errs()<<"---------\n";
-                        errs() << "Istruzione: \n";
-                        I->print(errs());
-                        errs() << "\n";
                         auto *add1 = dyn_cast<BinaryOperator>(&*I);
                         if (!add1)
                             continue;
                         
                         if(add1->getOpcode() != Instruction::Add &&
-                            add1->getOpcode() != Instruction::Sub){
+                            add1->getOpcode() != Instruction::Sub &&
+                            add1->getOpcode() != Instruction::Mul &&
+                            add1->getOpcode() != Instruction::SDiv &&
+                            add1->getOpcode() != Instruction::UDiv){
                                 continue;
                         }
-                        errs()<<"E' un istruzione che cerchiamo\n";
+                        errs() << "---Istruzione: \n";
+                        add1->print(errs());
+                        errs()<<"\nE' un istruzione che cerchiamo\n";
                         //cerchiamo gli users
                         for (auto *U : add1->users()){
                             U->print(errs());
@@ -54,7 +55,9 @@ namespace {
                                         
                                         for(auto *U2 : LI->users()){
                                             if(auto *op = dyn_cast<BinaryOperator>(U2)){
-                                                
+                                                errs()<<"Store trovata\n";
+                                                op->print(errs());
+                                                errs()<<"\n";
                                             }
                                         }
                                     }
@@ -71,17 +74,25 @@ namespace {
                             op->getOpcode() == Instruction::Sub)
                             ||
                             (add1->getOpcode() == Instruction::Sub &&
-                            op->getOpcode() == Instruction::Add);
+                            op->getOpcode() == Instruction::Add)
+                            ||
+                            (add1->getOpcode() == Instruction::Mul &&
+                            op->getOpcode() == Instruction::SDiv)
+                            ||
+                            (add1->getOpcode() == Instruction::SDiv &&
+                            op->getOpcode() == Instruction::Mul)
+                            ||
+                            (add1->getOpcode() == Instruction::UDiv &&
+                            op->getOpcode() == Instruction::Mul);
                             if(!inverse)
                                 continue;
-                            errs()<<"Inversa trovata\n";
                             //op deve avere come operando add1
                             if(op->getOperand(0) != add1)
                                 continue;
                             
                             Value *other = op->getOperand(1);
 
-                            //estrae costanti
+                            //estrae le costanti (se sono presenti)
                             ConstantInt *C1 = dyn_cast<ConstantInt>(add1->getOperand(1));
                             ConstantInt *C2 = dyn_cast<ConstantInt>(other);
 
@@ -91,7 +102,7 @@ namespace {
                             //controlla che abbiano lo stesso valore
                             if(C1->getValue() != C2->getValue())
                                 continue;
-                            
+                            errs()<<"Inversa trovata\n";
                             //a questo punto abbiamo trovato il match
                             Value *b = add1->getOperand(0);
                             errs()<<"MATCH\n";
