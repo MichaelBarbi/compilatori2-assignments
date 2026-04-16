@@ -1,5 +1,11 @@
 int main() {
 
+    // Moltiplicazione negativa
+
+    int k = 10;
+    int k1 = k * -8;
+    int k2 = k * -9;
+
     unsigned x = 160;
 
     // Moltiplicazione
@@ -16,8 +22,9 @@ int main() {
     // Divisione
     unsigned udiv = x / (unsigned) 32;
 
-    int y = -80;
+    int y = 80;
     int sdiv = y / 4;
+    sdiv /= -2;
 
     return 0;
 }

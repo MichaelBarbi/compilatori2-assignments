@@ -15,30 +15,43 @@ define dso_local i32 @main() #0 {
   %8 = alloca i32, align 4
   %9 = alloca i32, align 4
   %10 = alloca i32, align 4
+  %11 = alloca i32, align 4
+  %12 = alloca i32, align 4
+  %13 = alloca i32, align 4
   store i32 0, ptr %1, align 4
-  store i32 160, ptr %2, align 4
-  %11 = load i32, ptr %2, align 4
-  %12 = mul i32 %11, 16
-  store i32 %12, ptr %3, align 4
-  %13 = load i32, ptr %2, align 4
-  %14 = mul i32 %13, 17
-  store i32 %14, ptr %4, align 4
-  %15 = load i32, ptr %2, align 4
-  %16 = mul i32 %15, 15
-  store i32 %16, ptr %5, align 4
-  %17 = load i32, ptr %2, align 4
-  %18 = mul i32 %17, 18
-  store i32 %18, ptr %6, align 4
-  %19 = load i32, ptr %2, align 4
-  %20 = mul i32 %19, 14
-  store i32 %20, ptr %7, align 4
-  %21 = load i32, ptr %2, align 4
-  %22 = udiv i32 %21, 32
-  store i32 %22, ptr %8, align 4
-  store i32 -80, ptr %9, align 4
-  %23 = load i32, ptr %9, align 4
-  %24 = sdiv i32 %23, 4
-  store i32 %24, ptr %10, align 4
+  store i32 10, ptr %2, align 4
+  %14 = load i32, ptr %2, align 4
+  %15 = mul nsw i32 %14, -8
+  store i32 %15, ptr %3, align 4
+  %16 = load i32, ptr %2, align 4
+  %17 = mul nsw i32 %16, -9
+  store i32 %17, ptr %4, align 4
+  store i32 160, ptr %5, align 4
+  %18 = load i32, ptr %5, align 4
+  %19 = mul i32 %18, 16
+  store i32 %19, ptr %6, align 4
+  %20 = load i32, ptr %5, align 4
+  %21 = mul i32 %20, 17
+  store i32 %21, ptr %7, align 4
+  %22 = load i32, ptr %5, align 4
+  %23 = mul i32 %22, 15
+  store i32 %23, ptr %8, align 4
+  %24 = load i32, ptr %5, align 4
+  %25 = mul i32 %24, 18
+  store i32 %25, ptr %9, align 4
+  %26 = load i32, ptr %5, align 4
+  %27 = mul i32 %26, 14
+  store i32 %27, ptr %10, align 4
+  %28 = load i32, ptr %5, align 4
+  %29 = udiv i32 %28, 32
+  store i32 %29, ptr %11, align 4
+  store i32 80, ptr %12, align 4
+  %30 = load i32, ptr %12, align 4
+  %31 = sdiv i32 %30, 4
+  store i32 %31, ptr %13, align 4
+  %32 = load i32, ptr %13, align 4
+  %33 = sdiv i32 %32, -2
+  store i32 %33, ptr %13, align 4
   ret i32 0
 }
 

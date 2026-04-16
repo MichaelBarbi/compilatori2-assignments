@@ -15,36 +15,53 @@ define dso_local i32 @main() #0 {
   %8 = alloca i32, align 4
   %9 = alloca i32, align 4
   %10 = alloca i32, align 4
+  %11 = alloca i32, align 4
+  %12 = alloca i32, align 4
+  %13 = alloca i32, align 4
   store i32 0, ptr %1, align 4
-  store i32 160, ptr %2, align 4
-  %11 = load i32, ptr %2, align 4
-  %12 = shl i32 %11, 4
-  store i32 %12, ptr %3, align 4
-  %13 = load i32, ptr %2, align 4
-  %14 = shl i32 %13, 4
-  %15 = add i32 %14, %13
-  store i32 %15, ptr %4, align 4
-  %16 = load i32, ptr %2, align 4
-  %17 = shl i32 %16, 4
-  %18 = sub i32 %17, %16
-  store i32 %18, ptr %5, align 4
-  %19 = load i32, ptr %2, align 4
-  %20 = shl i32 %19, 4
-  %21 = add i32 %19, %19
-  %22 = add i32 %20, %21
+  store i32 10, ptr %2, align 4     
+  %14 = load i32, ptr %2, align 4   ; k = 10
+  %15 = shl i32 %14, 3    ; = k * 8
+  %16 = sub i32 0, %15    ; k1 = k * -8
+  store i32 %16, ptr %3, align 4
+  %17 = load i32, ptr %2, align 4
+  %18 = shl i32 %17, 3
+  %19 = add i32 %18, %17
+  %20 = sub i32 0, %19
+  store i32 %20, ptr %4, align 4
+  store i32 160, ptr %5, align 4
+  %21 = load i32, ptr %5, align 4
+  %22 = shl i32 %21, 4
   store i32 %22, ptr %6, align 4
-  %23 = load i32, ptr %2, align 4
+  %23 = load i32, ptr %5, align 4
   %24 = shl i32 %23, 4
-  %25 = add i32 %23, %23
-  %26 = sub i32 %24, %25
-  store i32 %26, ptr %7, align 4
-  %27 = load i32, ptr %2, align 4
-  %28 = lshr i32 %27, 5
+  %25 = add i32 %24, %23
+  store i32 %25, ptr %7, align 4
+  %26 = load i32, ptr %5, align 4
+  %27 = shl i32 %26, 4
+  %28 = sub i32 %27, %26
   store i32 %28, ptr %8, align 4
-  store i32 -80, ptr %9, align 4
-  %29 = load i32, ptr %9, align 4
-  %30 = ashr i32 %29, 2
-  store i32 %30, ptr %10, align 4
+  %29 = load i32, ptr %5, align 4
+  %30 = shl i32 %29, 4
+  %31 = add i32 %29, %29
+  %32 = add i32 %30, %31
+  store i32 %32, ptr %9, align 4
+  %33 = load i32, ptr %5, align 4
+  %34 = shl i32 %33, 4
+  %35 = add i32 %33, %33
+  %36 = sub i32 %34, %35
+  store i32 %36, ptr %10, align 4
+  %37 = load i32, ptr %5, align 4
+  %38 = lshr i32 %37, 5
+  store i32 %38, ptr %11, align 4
+  store i32 80, ptr %12, align 4
+  %39 = load i32, ptr %12, align 4
+  %40 = ashr i32 %39, 2
+  store i32 %40, ptr %13, align 4
+  %41 = load i32, ptr %13, align 4
+  %42 = ashr i32 %41, 1
+  %43 = sub i32 0, %42
+  store i32 %43, ptr %13, align 4
   ret i32 0
 }
 

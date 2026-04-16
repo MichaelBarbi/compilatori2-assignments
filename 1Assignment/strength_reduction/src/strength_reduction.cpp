@@ -48,7 +48,7 @@ namespace {
             ConstantInt *op2 = dyn_cast<ConstantInt>(I.getOperand(1));
             if (!op2) continue;
 
-            APInt K = op2->getValue();
+            APInt K = op2->getValue().abs();
 
             /*
             Per verificare i 4 possibili casi successivi, dobbiamo utilizzare la variabile K per i confronti.
@@ -58,6 +58,19 @@ namespace {
             Se K dunque è un i32, bitWidth sarù uguale a 32
             */
             unsigned bitWidth = K.getBitWidth();
+
+            /*
+            Gestione delle mul che coinvolgono costanti negative
+
+            int x = -10
+            x = x * 33
+            ==> mul x, 33 => x è negativo, quindi è già ok.
+
+            int x = 10;
+            x = x * -8
+            Se non si gestisce il caso della costante negativa, il logaritmo di un valore negativo non esiste,
+            pertanto il passo non verrebbe eseguito.
+            */
 
             // K è una potenza di 2
             if (auto exp = K.exactLogBase2(); exp != -1) {
@@ -69,7 +82,22 @@ namespace {
               );
 
               lshift->insertBefore(&I);
-              I.replaceAllUsesWith(lshift);
+
+              if (op2->getValue().isNegative()) {
+
+                BinaryOperator *negativeSub = BinaryOperator::Create(
+                  Instruction::Sub,
+                  ConstantInt::get(op2->getIntegerType(), 0),
+                  lshift
+                );
+
+                negativeSub->insertBefore(&I);
+                I.replaceAllUsesWith(negativeSub);
+
+              } else {
+                I.replaceAllUsesWith(lshift);
+              }
+
               instToErase.push_back(&I);
 
             } else {
@@ -123,43 +151,56 @@ namespace {
               }
 
               result->insertBefore(&I);
-              I.replaceAllUsesWith(result);
+              
+              if (op2->getValue().isNegative()) {
+
+                BinaryOperator *negativeSub = BinaryOperator::Create(
+                  Instruction::Sub,
+                  ConstantInt::get(op2->getIntegerType(), 0),
+                  result
+                );
+
+                negativeSub->insertBefore(&I);
+                I.replaceAllUsesWith(negativeSub);
+
+              } else {
+                I.replaceAllUsesWith(result);
+              }
+
               instToErase.push_back(&I);
             }
 
-          // Divisione Unsigned
-          } else if (I.getOpcode() == Instruction::UDiv) {
+          // Divisione unsigned e signed
+          } else if (I.getOpcode() == Instruction::UDiv || I.getOpcode() == Instruction::SDiv) {
 
             ConstantInt *op2 = dyn_cast<ConstantInt>(I.getOperand(1));
             if (!op2) continue;
 
-            if (auto exp = op2->getValue().exactLogBase2(); exp != -1) {
+            if (auto exp = op2->getValue().abs().exactLogBase2(); exp != -1) {
 
               BinaryOperator *rshift = BinaryOperator::Create(
-                Instruction::LShr,
+                I.getOpcode() == Instruction::UDiv ? Instruction::LShr : Instruction::AShr,
                 I.getOperand(0),
                 ConstantInt::get(op2->getIntegerType(), exp)
               );
 
               rshift->insertBefore(&I);
-              I.replaceAllUsesWith(rshift);
-              instToErase.push_back(&I);
-            }
+              
+              if (op2->getValue().isNegative()) {
 
-          // Divisione signed
-          } else if (I.getOpcode() == Instruction::SDiv) {
+                BinaryOperator *negativeSub = BinaryOperator::Create(
+                  Instruction::Sub,
+                  ConstantInt::get(op2->getIntegerType(), 0),
+                  rshift
+                );
 
-            ConstantInt *op2 = dyn_cast<ConstantInt>(I.getOperand(1));
-            if (!op2) continue;
+                negativeSub->insertBefore(&I);
+                I.replaceAllUsesWith(negativeSub);
 
-            if (auto exp = op2->getValue().exactLogBase2(); exp != -1) {
-              BinaryOperator *rshift = BinaryOperator::Create(
-                Instruction::AShr,
-                I.getOperand(0),
-                ConstantInt::get(op2->getIntegerType(), exp));
+              } else {
+                I.replaceAllUsesWith(rshift);
+              }
 
-              rshift->insertBefore(&I);
-              I.replaceAllUsesWith(rshift);
               instToErase.push_back(&I);
             }
           }
