@@ -53,7 +53,7 @@ namespace {
             /*
             Per verificare i 4 possibili casi successivi, dobbiamo utilizzare la variabile K per i confronti.
             K però non è un intero primitivo, bensì un APInt, ovvero un generico intero che può avere diverse rappresentazioni in memoria.
-            Poiché l'IR di LLVM fa sì che ogni operazione sia strettamente tipizzata
+            Quindi, per i singoli confronti +-1 e +-2, queste costanti numeriche devono essere a loro volta create come APInt e non semplici int.
 
             Se K dunque è un i32, bitWidth sarù uguale a 32
             */
