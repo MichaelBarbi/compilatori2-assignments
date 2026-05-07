@@ -11,7 +11,7 @@ int loop(int a, int b, int c) {
 
   // Loop con invariant annidato
   for (i = a; i < b; i++) {
-    int w = x + y;   // loop-invariant deve essere hoistato
+    int w = x + y;   // loop-invariant: deve essere hoistato
     ret += w * i;    // NON loop-invariant (dipende da i)
   }
 
