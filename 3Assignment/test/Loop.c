@@ -12,31 +12,37 @@
 
 int g;
 
-// Nome della funzione: g_incr
-// Numero di Argomenti: 1
-// Numero di chiamate: 0
-// Numero di BB: 1
-// Numero di Istruzioni: 4
 int g_incr(int c) {
   g += c;
   return g;
 }
 
-// Nome della funzione: loop
-// Numero di Argomenti: 3
-// Numero di chiamate: 0
-// Numero di BB: 3
-// Numero di Istruzioni: 10
+
 int loop(int a, int b, int c) {
   int i, ret = 0;
   int a2 = 0;
+  int num1 = 0;
+  int num2 = 3;
+  int num3 = 4;
+
+  for (i = 0; i < 10; i++){
+    num1 = num1 + num2;
+
+    if (a < b) {
+      printf("if (a < b)\n");
+    }
+  }
+
   for (i = a; i < b; i++) {
     g_incr(c);
     a2 = 0;
+    num = num1 + num2;
     while(a2 <= 10){
       a++;
     }
   }
+
+  
 
   return ret + g;
 }
