@@ -36,7 +36,7 @@ int loop(int a, int b, int c) {
   for (i = a; i < b; i++) {
     g_incr(c);
     a2 = 0;
-    num = num1 + num2;
+    num1 = num2 + num2;
     while(a2 <= 10){
       a++;
     }
