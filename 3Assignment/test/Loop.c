@@ -5,7 +5,7 @@ int loop(int a, int b, int c) {
 
   // Caso classico LICM: x*y è loop-invariant
   for (i = 0; i < 10; i++) {
-    z = x * y;       // loop-invariant → deve essere hoistato
+    z = x * y;       // loop-invariant deve essere hoistato
     ret = ret + z;   // NON loop-invariant (dipende da ret)
   }
 
